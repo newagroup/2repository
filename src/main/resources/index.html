@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 注意: css 先加载 -->
+    <link rel="stylesheet" href="static/elementUI/index.css">
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html,body,#app  {
+            width:100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .el-aside {
+            background-color: #20222A;
+        }
+
+        .el-menu-item.is-active {
+            color: #409EFF;
+            background-color: rgb(26,27,34) !important;;
+        }
+
+        .el-main {
+            padding: 0px;
+            margin: 0px;
+            overflow: hidden;
+        }
+
+        body > .el-container {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .el-submenu {
+            list-style: none;
+            margin: 0;
+            padding-left: 0;
+            width: 200px;
+        }
+
+    </style>
+</head>
+<body>
+    <el-container id="app">
+        <el-container>
+            <el-aside width="200px">
+                <el-menu
+                        @select="selectItem"
+                        background-color="#20222A"
+                        text-color="rgba(255,255,255,.8)"
+                        active-text-color="#ffd04b">
+                    <el-submenu index="1">
+                        <template slot="title">
+                            <i class="el-icon-setting"></i>
+                            <span>系统管理</span>
+                        </template>
+                        <el-menu-item v-for="(e,index) in menus"
+                                     :index="index"><i :class="e.icon"></i>{{e.name}}</el-menu-item>
+                    </el-submenu>
+                </el-menu>
+            </el-aside>
+            <el-main>
+                <el-container>
+                    <el-header style="border-bottom: 1px solid #EBEEF5">
+                        <div style="width: 200px;float: left">
+                            <el-breadcrumb separator="/" style="height: 60px; line-height: 60px">
+                                <el-breadcrumb-item><a href="/">系统管理</a></el-breadcrumb-item>
+                                <el-breadcrumb-item>{{item.name}}</el-breadcrumb-item>
+                            </el-breadcrumb>
+                        </div>
+                    </el-header>
+                    <el-main :style="{height:mainHeight}">
+                        <!-- 将一个页面引入到iframe所在的位置 -->
+                        <iframe name="main" :src="src" width="100%" 
+								height="100%"
+                                frameborder="0" scrolling="auto"></iframe>
+                    </el-main>
+                    <el-footer style="border-top: 1px solid #EBEEF5;height: 50px">
+                        <p style="text-align: center;line-height: 50px; color:#606266">© 2016 xxxxx.com 京ICP备XXXXXX号</p>
+                    </el-footer>
+                </el-container>
+            </el-main>
+        </el-container>
+    </el-container>
+    <!-- 1.搭建vue环境 -->
+    <script src="static/vue/vue.min.js"></script>
+    <script src="static/vue/axios.min.js"></script>
+    <script src="static/vue/qs.js"></script>
+    <!-- 2.搭建elementUI -->
+    <script src="static/elementUI/index.js"></script>
+    <script>
+        var vue = new Vue({
+            el:"#app",
+            data:{
+                item:{name:"部门管理"},
+                src:"views/dept.html",
+                mainHeight:"",// 中间区的高度
+                menus:[{
+                    id:1,
+                    name:"部门管理",
+                    icon:"el-icon-s-management",
+                    url:"views/dept.html"
+                },{
+                    id:2,
+                    name:"资源管理",
+                    icon:"el-icon-s-order",
+                    url:"views/resource.html"
+                },{
+                    id:3,
+                    name:"角色管理",
+                    icon:"el-icon-s-claim",
+                    url:"views/role.html",
+                },{
+                    id:4,
+                    name:"用户管理",
+                    icon:"el-icon-s-custom",
+                    url:"views/user.html"
+                }]
+            },
+            created:function () {
+				console.log(this.src);
+                this.mainHeight = window.innerHeight - 110 + "px";
+            },
+            methods:{
+                selectItem:function (index,indexPath) {
+                    this.src = this.menus[index].url;
+
+                    this.item = {
+                        name: this.menus[index].name
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>
